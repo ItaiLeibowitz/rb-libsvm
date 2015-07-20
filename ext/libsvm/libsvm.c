@@ -634,6 +634,7 @@ void Init_libsvm_ext() {
   rb_define_method(cModel, "support_vectors_count", cModel_support_vectors_count, 0);
   rb_define_method(cModel, "predict", cModel_predict, 1);
   rb_define_method(cModel, "predict_probability", cModel_predict_probability, 1);
+  rb_define_method(cModel, "predict_values", cModel_predict_values, 1);
 
   /**
    * Module with constants for values that are allowed for
