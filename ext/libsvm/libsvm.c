@@ -411,6 +411,52 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
   return target;
 }
 
+
+/* call-seq:
+ *   model.predict_values(example)
+ *
+ * Classify an example and return both the label (or regression
+ * value), as well as the array of scores found for each class.
+ *
+ * The first element of the returned array contains the label. The
+ * second element is another array which contains the confidence score
+ * value found for each model class.
+ *
+ *
+ * @return [Array<Float, Array<Float>>] predicted label and
+ *   score per class
+ */
+static VALUE cModel_predict_values(VALUE obj,VALUE example) {
+  struct svm_node *x;
+  struct svm_model *model;
+  double class;
+  double *c_estimates;
+  VALUE estimates;
+  VALUE target;
+  int i;
+
+  x = example_to_internal(example);
+  Data_Get_Struct(obj, struct svm_model, model);
+  c_estimates = calloc(model->nr_class, sizeof(double));
+  if(c_estimates == 0) {
+    rb_raise(rb_eNoMemError, "on predict values estimates allocation" " %s:%i", __FILE__,__LINE__);
+  }
+
+  class = svm_predict_values(model, x, c_estimates);
+
+  estimates = rb_ary_new();
+  for (i = 0; i < model->nr_class; i++)
+    rb_ary_push(estimates, rb_float_new(c_estimates[i]));
+
+  free(c_estimates);
+  free(x);
+
+  target = rb_ary_new();
+  rb_ary_push(target, rb_float_new(class));
+  rb_ary_push(target, estimates);
+  return target;
+}
+
 /* call-seq:
  *   model.save(filename)
  *
