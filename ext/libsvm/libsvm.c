@@ -400,7 +400,7 @@ static VALUE cModel_predict_probability(VALUE obj,VALUE example) {
 
   estimates = rb_ary_new();
   for (i = 0; i < model->nr_class; i++)
-    rb_ary_push(estimates, rx_from_double(c_estimates[i]));
+    rb_ary_push(estimates, rb_float_new(c_estimates[i]));
 
   free(c_estimates);
   free(x);
