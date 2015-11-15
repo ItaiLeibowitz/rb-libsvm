@@ -454,7 +454,7 @@ static VALUE cModel_predict_values(VALUE obj,VALUE example) {
   class = svm_predict_values(model, x, c_estimates);
 
   estimates = rb_ary_new();
-  for (i = 0; i < model->nr_class; i++)
+  for (i = 0; i < n; i++)
     rb_ary_push(estimates, rx_from_double(c_estimates[i]));
 
   if(c_estimates) {
