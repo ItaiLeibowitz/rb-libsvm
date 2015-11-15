@@ -436,10 +436,17 @@ static VALUE cModel_predict_values(VALUE obj,VALUE example) {
   VALUE estimates;
   VALUE target;
   int i;
+  int n;
 
   x = example_to_internal(example);
   Data_Get_Struct(obj, struct svm_model, model);
-  c_estimates = calloc(model->nr_class, sizeof(double));
+  if (model->nr_class > 2) {
+    n = (model->nr_class) * (model->nr_class - 1) / 2
+  } 
+  else {
+    n = model->nr_class
+  }
+  c_estimates = calloc(n, sizeof(double));
   if(c_estimates == 0) {
     rb_raise(rb_eNoMemError, "on predict values estimates allocation" " %s:%i", __FILE__,__LINE__);
   }
