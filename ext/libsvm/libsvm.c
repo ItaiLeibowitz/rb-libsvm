@@ -453,7 +453,9 @@ static VALUE cModel_predict_values(VALUE obj,VALUE example) {
   if(c_estimates) {
     free(c_estimates);
   }
-  free(x);
+  if (x) {
+    free(x);
+  }
 
   target = rb_ary_new();
   rb_ary_push(target, rb_float_new(class));
